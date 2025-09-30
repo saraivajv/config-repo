@@ -6,7 +6,7 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-          include-expression: "'crud-service'.equals(serviceId) || 'db-service'.equals(serviceId)"
+          include-expression: "'crud-service'.equalsIgnoreCase(serviceId) || 'db-service'.equalsIgnoreCase(serviceId) || 'ai-service'.equalsIgnoreCase(serviceId)"
       default-filters:
         - name: Resilience4JCircuitBreaker
           args:
