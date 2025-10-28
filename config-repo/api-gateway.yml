@@ -1,5 +1,4 @@
 spring:
-
   cloud:
     gateway:
       discovery:
@@ -7,6 +6,10 @@ spring:
           enabled: true
           lower-case-service-id: true
           include-expression: "'crud-service'.equalsIgnoreCase(serviceId) || 'db-service'.equalsIgnoreCase(serviceId) || 'ai-service'.equalsIgnoreCase(serviceId)"
+
+      # --- SUAS CONFIGURAÇÕES ANTIGAS (MANTIDAS) ---
+      # Estes filtros serão aplicados a TODAS as rotas,
+      # incluindo as automáticas E a nova rota GraphQL
       default-filters:
         - name: Resilience4JCircuitBreaker
           args:
@@ -22,6 +25,11 @@ spring:
               burstCapacity: 20
               requestedTokens: 1
 
+      routes:
+        - id: crud-service-graphql-route
+          uri: lb://crud-service  # "lb://" usa o Eureka para achar o crud-service
+          predicates:
+            - Path=/graphql
 
 server:
   port: 8080
@@ -53,9 +61,9 @@ logging:
     com.netflix.discovery: DEBUG
     org.springframework.cloud.netflix.eureka: DEBUG
     io.github.resilience4j.circuitbreaker: DEBUG
-    io.github.resilience4j.retry: DEBUG      
+    io.github.resilience4j.retry: DEBUG
     io.github.resilience4j.ratelimiter: DEBUG
-    org.springframework.cloud.gateway: DEBUG 
+    org.springframework.cloud.gateway: DEBUG
 
 resilience4j:
   retry:
